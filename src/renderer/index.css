@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-app-region: no-drag;
+  }
+
+  body {
+    @apply bg-zinc-950 text-zinc-100 overflow-hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      sans-serif;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-zinc-700 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-600;
+  }
+}
+
+@layer components {
+  .drag-region {
+    -webkit-app-region: drag;
+  }
+
+  .tiptap-editor .ProseMirror {
+    @apply outline-none min-h-[300px] p-4;
+  }
+
+  .tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
+    @apply text-zinc-500 float-left h-0 pointer-events-none;
+    content: attr(data-placeholder);
+  }
+
+  .tiptap-editor .ProseMirror h1 {
+    @apply text-3xl font-bold mb-4 text-zinc-100;
+  }
+
+  .tiptap-editor .ProseMirror h2 {
+    @apply text-2xl font-bold mb-3 text-zinc-200;
+  }
+
+  .tiptap-editor .ProseMirror h3 {
+    @apply text-xl font-semibold mb-2 text-zinc-200;
+  }
+
+  .tiptap-editor .ProseMirror p {
+    @apply mb-3 leading-relaxed text-zinc-300;
+  }
+
+  .tiptap-editor .ProseMirror ul,
+  .tiptap-editor .ProseMirror ol {
+    @apply pl-6 mb-3;
+  }
+
+  .tiptap-editor .ProseMirror li {
+    @apply mb-1 text-zinc-300;
+  }
+
+  .tiptap-editor .ProseMirror blockquote {
+    @apply border-l-4 border-amber-600/50 pl-4 italic text-zinc-400 my-4;
+  }
+
+  .tiptap-editor .ProseMirror code {
+    @apply bg-zinc-800 px-1.5 py-0.5 rounded text-sm font-mono text-amber-300;
+  }
+
+  .tiptap-editor .ProseMirror pre {
+    @apply bg-zinc-800 rounded-lg p-4 mb-4;
+  }
+
+  .tiptap-editor .ProseMirror pre code {
+    @apply bg-transparent p-0;
+  }
+
+  .tiptap-editor .ProseMirror hr {
+    @apply border-zinc-700 my-6;
+  }
+
+  .tiptap-editor .ProseMirror strong {
+    @apply text-zinc-100 font-bold;
+  }
+
+  .tiptap-editor .ProseMirror em {
+    @apply italic;
+  }
+
+  .tiptap-editor .ProseMirror mark {
+    @apply bg-amber-500/30 text-zinc-100 rounded px-0.5;
+  }
+}
