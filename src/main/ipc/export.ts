@@ -43,7 +43,13 @@ export function registerExportHandlers() {
       }
       parts.push('---\n');
 
-      for (const chapter of manuscriptIndex.chapters || []) {
+      const chapters = (manuscriptIndex.chapters || [])
+        .slice()
+        .sort((a: { order?: number }, b: { order?: number }) =>
+          (a.order ?? 0) - (b.order ?? 0),
+        );
+
+      for (const chapter of chapters) {
         try {
           const chapterPath = path.join(
             projectPath,

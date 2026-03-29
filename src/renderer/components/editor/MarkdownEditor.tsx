@@ -25,6 +25,7 @@ interface MarkdownEditorProps {
   placeholder?: string;
   showToolbar?: boolean;
   className?: string;
+  toolbarRight?: React.ReactNode;
 }
 
 export function MarkdownEditor({
@@ -33,6 +34,7 @@ export function MarkdownEditor({
   placeholder = 'Start writing...',
   showToolbar = true,
   className = '',
+  toolbarRight,
 }: MarkdownEditorProps) {
   const editor = useEditor({
     extensions: [
@@ -180,6 +182,12 @@ export function MarkdownEditor({
           >
             <Redo className="w-4 h-4" />
           </ToolbarButton>
+          {toolbarRight && (
+            <>
+              <div className="flex-1" />
+              {toolbarRight}
+            </>
+          )}
         </div>
       )}
       <EditorContent editor={editor} />

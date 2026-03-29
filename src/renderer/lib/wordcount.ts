@@ -1,5 +1,8 @@
 export function countWords(text: string): number {
-  const cleaned = text.replace(/^---[\s\S]*?---\n*/, '').trim();
+  const cleaned = text
+    .replace(/^---[\s\S]*?---\n*/, '')
+    .replace(/<[^>]*>/g, ' ')
+    .trim();
   if (!cleaned) return 0;
   return cleaned.split(/\s+/).filter(Boolean).length;
 }

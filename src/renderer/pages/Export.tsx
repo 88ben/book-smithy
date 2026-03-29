@@ -9,6 +9,7 @@ import {
 import { useProjectStore, type ChapterEntry } from '@renderer/stores/projectStore';
 import { parseFrontmatter } from '@renderer/lib/frontmatter';
 import { countWords } from '@renderer/lib/wordcount';
+import { sortedChapters, chapterDisplayTitle } from '@renderer/lib/manuscript';
 
 type ExportFormat = 'markdown' | 'html' | 'text';
 
@@ -37,6 +38,7 @@ export function ExportPage() {
         `${projectPath}/Manuscript/_index.json`,
       );
       const chapterEntries: ChapterEntry[] = data?.chapters || [];
+      const sorted = sortedChapters(chapterEntries);
 
       const previews: ChapterPreview[] = [];
       const contentParts: string[] = [];
@@ -49,7 +51,9 @@ export function ExportPage() {
         contentParts.push('\n---\n');
       }
 
-      for (const ch of chapterEntries) {
+      for (let i = 0; i < sorted.length; i++) {
+        const ch = sorted[i];
+        const displayName = chapterDisplayTitle(ch, i + 1);
         try {
           const raw = await window.bookSmithy.fs.readFile(
             `${projectPath}/Manuscript/chapters/${ch.filename}`,
@@ -58,7 +62,7 @@ export function ExportPage() {
           const parsed = parseFrontmatter(raw);
           const wc = countWords(parsed.content);
           previews.push({
-            title: ch.title,
+            title: displayName,
             wordCount: wc,
             status: ch.status,
           });
@@ -68,7 +72,7 @@ export function ExportPage() {
           contentParts.push('\n---\n');
         } catch {
           previews.push({
-            title: ch.title,
+            title: displayName,
             wordCount: 0,
             status: ch.status,
           });

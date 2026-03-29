@@ -73,23 +73,17 @@ export function AppShell() {
     }
   }
 
-  if (focusMode) {
-    return (
-      <div className="h-screen w-screen flex flex-col">
-        <SectionContent />
-      </div>
-    );
-  }
-
   return (
     <div className="h-screen w-screen flex flex-col">
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        {!focusMode && <Sidebar />}
         <main className="flex-1 overflow-y-auto">
           <SectionContent />
         </main>
       </div>
-      <StatusBar wordCount={totalWordCount} chapterCount={chapterCount} />
+      {!focusMode && (
+        <StatusBar wordCount={totalWordCount} chapterCount={chapterCount} />
+      )}
     </div>
   );
 }
