@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  FileText,
   FileDown,
-  BookOpen,
   Check,
   Loader2,
 } from 'lucide-react';
@@ -11,7 +9,7 @@ import { parseFrontmatter } from '@renderer/lib/frontmatter';
 import { countWords } from '@renderer/lib/wordcount';
 import { sortedChapters, chapterDisplayTitle } from '@renderer/lib/manuscript';
 
-type ExportFormat = 'markdown' | 'html' | 'text';
+type ExportFormat = 'markdown' | 'html' | 'text' | 'epub';
 
 interface ChapterPreview {
   title: string;
@@ -97,11 +95,13 @@ export function ExportPage() {
         markdown: ['md'],
         html: ['html'],
         text: ['txt'],
+        epub: ['epub'],
       };
       const formatNames: Record<ExportFormat, string> = {
         markdown: 'Markdown',
         html: 'HTML',
         text: 'Plain Text',
+        epub: 'EPUB',
       };
 
       const defaultName = `${projectInfo?.name || 'manuscript'}.${extensions[format][0]}`;
@@ -115,18 +115,23 @@ export function ExportPage() {
         return;
       }
 
-      let content = previewContent;
+      if (format === 'epub') {
+        await window.bookSmithy.export.toEpub(projectPath, savePath);
+      } else {
+        let content = previewContent;
 
-      if (format === 'html') {
-        content = markdownToBasicHtml(previewContent, projectInfo?.name || '');
-      } else if (format === 'text') {
-        content = previewContent
-          .replace(/^#{1,6}\s+/gm, '')
-          .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
-          .replace(/---/g, '_______________');
+        if (format === 'html') {
+          content = markdownToBasicHtml(previewContent, projectInfo?.name || '');
+        } else if (format === 'text') {
+          content = previewContent
+            .replace(/^#{1,6}\s+/gm, '')
+            .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
+            .replace(/---/g, '_______________');
+        }
+
+        await window.bookSmithy.fs.writeFile(savePath, content);
       }
 
-      await window.bookSmithy.fs.writeFile(savePath, content);
       setExported(true);
       setTimeout(() => setExported(false), 3000);
     } finally {
@@ -136,40 +141,30 @@ export function ExportPage() {
 
   const totalWords = chapters.reduce((sum, ch) => sum + ch.wordCount, 0);
 
-  const formats: { id: ExportFormat; label: string; icon: React.ElementType }[] = [
-    { id: 'markdown', label: 'Markdown (.md)', icon: FileText },
-    { id: 'html', label: 'HTML (.html)', icon: BookOpen },
-    { id: 'text', label: 'Plain Text (.txt)', icon: FileText },
+  const formats: { id: ExportFormat; label: string }[] = [
+    { id: 'markdown', label: 'Markdown (.md)' },
+    { id: 'html', label: 'HTML (.html)' },
+    { id: 'text', label: 'Plain Text (.txt)' },
+    { id: 'epub', label: 'EPUB (.epub)' },
   ];
 
   return (
     <div className="h-full flex flex-col">
-      <div className="px-6 pt-6 pb-4">
-        <h2 className="text-lg font-semibold text-zinc-200 mb-4">
-          Export Manuscript
-        </h2>
-
-        <div className="flex items-center gap-3 mb-4">
-          {formats.map((f) => (
-            <button
-              key={f.id}
-              onClick={() => setFormat(f.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
-                format === f.id
-                  ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
-                  : 'text-zinc-400 border-zinc-800 hover:bg-zinc-800/50'
-              }`}
-            >
-              <f.icon className="w-4 h-4" />
-              {f.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-4 mb-4">
-          <div className="text-sm text-zinc-400">
+      <div className="flex items-center justify-between px-6 pt-6 pb-4">
+        <h2 className="text-lg font-semibold text-zinc-200">Export Manuscript</h2>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-zinc-500">
             {chapters.length} chapters, {totalWords.toLocaleString()} words
-          </div>
+          </span>
+          <select
+            value={format}
+            onChange={(e) => setFormat(e.target.value as ExportFormat)}
+            className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-300 focus:outline-none focus:border-cyan-500/50 cursor-pointer"
+          >
+            {formats.map((f) => (
+              <option key={f.id} value={f.id}>{f.label}</option>
+            ))}
+          </select>
           <button
             onClick={handleExport}
             disabled={exporting || chapters.length === 0}
@@ -188,7 +183,7 @@ export function ExportPage() {
       </div>
 
       <div className="flex-1 overflow-hidden px-6 pb-6 flex gap-4">
-        <div className="w-64 shrink-0 bg-zinc-900/30 rounded-xl border border-zinc-800/50 overflow-hidden flex flex-col">
+        <div className="w-64 shrink-0 bg-zinc-900/30 rounded-xl border border-zinc-800/50 flex flex-col overflow-hidden">
           <div className="px-3 py-2 border-b border-zinc-800/50">
             <span className="text-xs text-zinc-500 font-medium">Contents</span>
           </div>
@@ -207,11 +202,11 @@ export function ExportPage() {
           </div>
         </div>
 
-        <div className="flex-1 bg-zinc-900/30 rounded-xl border border-zinc-800/50 overflow-hidden">
+        <div className="flex-1 bg-zinc-900/30 rounded-xl border border-zinc-800/50 overflow-hidden flex flex-col">
           <div className="px-3 py-2 border-b border-zinc-800/50">
             <span className="text-xs text-zinc-500 font-medium">Preview</span>
           </div>
-          <div className="flex-1 overflow-y-auto p-6 max-h-[calc(100vh-320px)]">
+          <div className="flex-1 overflow-y-auto p-6">
             <div className="max-w-2xl mx-auto font-serif text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap">
               {previewContent || (
                 <span className="text-zinc-600">

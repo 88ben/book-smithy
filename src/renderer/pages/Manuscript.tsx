@@ -294,7 +294,7 @@ export function Manuscript() {
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between px-6 pt-6 pb-4">
-        <h2 className="text-lg font-semibold text-zinc-200">Manuscript</h2>
+        <h2 className="text-lg font-semibold text-zinc-200 select-none cursor-default">Manuscript</h2>
         <div className="flex items-center gap-2">
           {selectedChapter && (
             <span className="text-xs text-zinc-500">
@@ -303,7 +303,7 @@ export function Manuscript() {
           )}
           <button
             onClick={() => setFocusMode(!focusMode)}
-            className="p-2 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded-lg transition-colors"
+            className="p-2.5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded-lg transition-colors"
             title={focusMode ? 'Exit focus mode' : 'Focus mode'}
           >
             {focusMode ? (

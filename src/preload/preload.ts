@@ -32,6 +32,8 @@ const api = {
   export: {
     toMarkdown: (projectPath: string, outputPath: string) =>
       ipcRenderer.invoke('export:markdown', projectPath, outputPath),
+    toEpub: (projectPath: string, outputPath: string) =>
+      ipcRenderer.invoke('export:epub', projectPath, outputPath),
     toPdf: (projectPath: string, outputPath: string) =>
       ipcRenderer.invoke('export:pdf', projectPath, outputPath),
     selectSavePath: (defaultName: string, filters: { name: string; extensions: string[] }[]) =>

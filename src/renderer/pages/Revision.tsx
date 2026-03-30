@@ -155,29 +155,27 @@ export function Revision() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="px-6 pt-6 pb-4">
-        <div className="flex items-center gap-3">
-          <input
-            type="text"
-            placeholder="Snapshot name (e.g., 'First draft complete')"
-            value={snapshotName}
-            onChange={(e) => setSnapshotName(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleCreateSnapshot()}
-            className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-rose-500/50"
-          />
-          <button
-            onClick={handleCreateSnapshot}
-            disabled={!snapshotName.trim() || creating}
-            className="flex items-center gap-2 px-4 py-2 bg-rose-600/20 hover:bg-rose-600/30 disabled:opacity-50 text-rose-400 rounded-lg text-sm font-medium transition-colors"
-          >
-            <Camera className="w-4 h-4" />
-            {creating ? 'Creating...' : 'Create Snapshot'}
-          </button>
-        </div>
+      <div className="flex items-center gap-3 px-6 pt-6 pb-4">
+        <input
+          type="text"
+          placeholder="Snapshot name (e.g., 'First draft complete')"
+          value={snapshotName}
+          onChange={(e) => setSnapshotName(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleCreateSnapshot()}
+          className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-rose-500/50"
+        />
+        <button
+          onClick={handleCreateSnapshot}
+          disabled={!snapshotName.trim() || creating}
+          className="flex items-center gap-2 px-4 py-2 bg-rose-600/20 hover:bg-rose-600/30 disabled:opacity-50 text-rose-400 rounded-lg text-sm font-medium transition-colors"
+        >
+          <Camera className="w-4 h-4" />
+          {creating ? 'Creating...' : 'Create Snapshot'}
+        </button>
       </div>
 
       <div className="flex-1 overflow-hidden px-6 pb-6 flex gap-4">
-        <div className="w-72 shrink-0 bg-zinc-900/30 rounded-xl border border-zinc-800/50 flex flex-col overflow-hidden">
+        <div className="w-64 shrink-0 bg-zinc-900/30 rounded-xl border border-zinc-800/50 flex flex-col overflow-hidden">
           <div className="px-3 py-2 border-b border-zinc-800/50">
             <span className="text-xs text-zinc-500 font-medium">
               Snapshots

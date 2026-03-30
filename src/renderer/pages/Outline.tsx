@@ -369,13 +369,13 @@ export function Outline() {
           onClick={handleAddAct}
           className="flex items-center gap-1.5 px-3 py-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg text-sm transition-colors"
         >
-          <Plus className="w-3.5 h-3.5" />
+          <Plus className="w-4 h-4" />
           Add Act
         </button>
       </div>
 
       <div className="flex-1 overflow-hidden px-6 pb-6 flex gap-4">
-        <div className="w-80 shrink-0 overflow-y-auto space-y-2">
+        <div className="w-64 shrink-0 overflow-y-auto space-y-2">
           {sortedActs.map((act, actIdx) => {
             const actPosition = actIdx + 1;
             const actScenes = index.scenes

@@ -77,7 +77,7 @@ export function AppShell() {
     <div className="h-screen w-screen flex flex-col">
       <div className="flex flex-1 overflow-hidden">
         {!focusMode && <Sidebar />}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-hidden">
           <SectionContent />
         </main>
       </div>
